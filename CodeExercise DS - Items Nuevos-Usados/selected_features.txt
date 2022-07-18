@@ -1,0 +1,15 @@
+base_price
+seller_id
+available_quantity
+seller_state
+price
+week_day
+sold_quantity
+mode
+Transferencia_bancaria
+category_id
+Aceptan_Tarjeta
+seller_city
+initial_quantity
+warranty
+automatic_relist
