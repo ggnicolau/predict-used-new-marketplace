@@ -2659,6 +2659,8 @@ https://machinelearningmastery.com/how-to-score-probability-predictions-in-pytho
 
 https://www.machinelearningplus.com/statistics/brier-score/
 
+https://medium.com/@penggongting/understanding-roc-auc-pros-and-cons-why-is-bier-score-a-great-supplement-c7a0c976b679
+
 https://towardsdatascience.com/why-you-should-always-use-feature-embeddings-with-structured-datasets-7f280b40e716
 
 ## Version
