@@ -1,7 +1,3 @@
- <div align="center">
-<img src="http://www.saocarlos.usp.br/wp-content/uploads/2020/11/logo_50anos_500.250.png">
-</div>
-
 ---
 
 Project Organization
@@ -51,7 +47,7 @@ The deliverables are:
 
 ## Resumed Conclusions
 
-1) You will find our first **selected columns at section 2.1**, then you can check our selected columns after treatment and feature engineering.
+1) You will find our first **selected columns at section 2.1**, then you can check our definitselected columns after treatment and feature engineering.
 2) We didn't predict our classes (0 and 1), but we decided to predict the **probability** for our binary classification problem, since it's more meaningful (literally, we calculate the probability to be class 0 or 1). Thus, we didn't calculate accuracy, precision, recall, F1-score, Kappa or other metrics. For probability evaluation, we opted to use **mean squared error, log loss and Brier score** (lower is better). We also used the **ROC curve** to evaluate the model and calculated **ROC AUC** score (higher is better).
 3) Our metrics only make sense if we compare between models. We compared four models.
    (a) Our **first** one is our **baseline**, we used **logistic regressions** with no parameters and got a bad result with a score of **0.69**. We mostly used it because applying a linear model can help to get insights from the data;
