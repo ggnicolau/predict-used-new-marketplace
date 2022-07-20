@@ -1706,7 +1706,7 @@ plt.savefig('logistic_kappa_threshold.png', bbox_inches='tight', dpi = 300)
 
 
     
-![png](output_2_56_0_.png)
+![png](output_2_56_0.png)
     
 
 
@@ -2333,7 +2333,7 @@ plt.show()
 
 
     
-![png](output_56_2.png)
+![png](output_56_3.png)
     
 
 
