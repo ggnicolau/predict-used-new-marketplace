@@ -59,7 +59,88 @@ The deliverables are:
    (c) Our **third** one, we first used **embeddings** (neural networks) to encode our categorical features (category and seller city) with **high cardinality** which we couldn't do One Hot Encoding (due to computational cost) or Label Encoding (since unique values are independent from each other). After that, we just applied a **Logistic Regression**. Impressively, we got a **ROC AUC of 0.9** with a simple linear model for binary classification;
    (d) Finally, our **fourth** one we also used **embeddings** for encoding, but then used an **XGBoost**. We got a **ROC AUC of 0.93**, as we expected to get a better result from the previous one;
 
-- **REMARKS: Personally, I think the embeddings encoding with Logistic Regression is the best model, because it's simpler and has more interprability. Occam's Razor principle states that other things equal, explanations that posit fewer entities, or fewer kinds of entities, are to be preferred to explanations that posit more.**
+- ***REMARKS: Personally, I think the embeddings encoding with Logistic Regression is the best model, because it's simpler and has more interprability. Occam's Razor principle states that other things equal, explanations that posit fewer entities, or fewer kinds of entities, are to be preferred to explanations that posit more.***
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Metrics</th>
+      <th>XGBoost</th>
+      <th>Emb_Logistic</th>
+      <th>Emb_XGBoost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>mean_squared_error_test</td>
+      <td>0.36</td>
+      <td>0.36</td>
+      <td>0.32</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Roc_auc</td>
+      <td>0.89</td>
+      <td>0.90</td>
+      <td>0.93</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Brier_error</td>
+      <td>0.13</td>
+      <td>0.12</td>
+      <td>0.10</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Logloss</td>
+      <td>0.40</td>
+      <td>0.39</td>
+      <td>0.34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+```
+- The Mean Squared Error (or MSE) is much like the mean absolute error in that it provides a gross idea of the magnitude of error. 
+Taking the square root of the mean squared error converts the units back to the original units of the output variable and can be meaningful for description and presentation. 
+This is called the Root Mean Squared Error (or RMSE).
+
+- Logistic loss (or log loss) is a performance metric for evaluating the predictions of probabilities of membership to a given class. 
+The scalar probability between 0 and 1 can be seen as a measure of confidence for a prediction by an algorithm. Predictions that are correct or incorrect are rewarded or punished proportionally to the confidence of the prediction.
+It heavily penalizes predicted probabilities far away from their expected value.
+
+- The Brier score calculates the mean squared error between predicted probabilities and the expected values. 
+It`s gentler than log loss but still penalizes proportional to the distance from the expected value.
+
+- Area Under ROC Curve (or ROC AUC for short) is a performance metric for binary classification problems. 
+The AUC represents a model’s ability to discriminate between positive and negative classes. 
+An area of 1.0 represents a model that made all predictions perfectly. An area of 0.5 represents a model as good as random. 
+A ROC Curve is a plot of the true positive rate and the false positive rate for a given set of probability predictions at different thresholds used to map the probabilities to class labels. 
+The area under the curve is then the approximate integral under the ROC Curve.
+The area under ROC curve that summarizes the likelihood of the model predicting a higher probability for true positive cases than true negative cases.
+
+*(machinelearningmastery.com)*
+```
+```
+
 
 
 --------
