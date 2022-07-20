@@ -665,7 +665,6 @@ COLUMNS THAT MATTERS:
 - last_updated (we'll check)
 - id (we'll check)
 - official_store_id (different stores sells different items and conditions)
-- accepts_mercadopago (new products might accept more payment methods)
 - original_price (price again)
 - currency_id (type of payment and currency might be due to the kind of seller and products)
 - title (keep title to find product)
@@ -693,9 +692,10 @@ TRANSFORM COLUMNS (TYPE OF PAYMENTS):
 - Mastercard_Maestro
 - Diners
 - Transferencia_bancaria
-- MercadoPago (será? duplicado com accepts mercadopago?)
+- accepts_mercadopago
+- MercadoPago
 - Efectivo
-- Tarjeta_de_crédito (duplicado com outras colunas? mesclar colunas e preencher essa)
+- Tarjeta_de_crédito
 - American_Express
 - MasterCard
 - Visa_Electron
@@ -720,7 +720,7 @@ COLUMNS WE DON'T NEED:
 DOUBTS:
 - variations
 - attributes
-- dimensionS
+- dimension
 
 
 ```python
