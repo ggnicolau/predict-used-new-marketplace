@@ -1973,23 +1973,48 @@ plt.show()
 
 
 ```python
-# best_preds_score = np.where(best_preds < bt, 0, 1) # Uncomment if you want to change threshold... Lower, because threshold calculated on Brier Loss and lower is better
-
-print("Mean_squared_error_test = {}".format(mean_squared_error(Y_test,  preds_test[:,1])))
-print("Roc_auc = {}".format(roc_auc_score(Y_test,  preds_test[:,1])))
+# best_preds_score = np.where(preds_test < bt, 0, 1) # Uncomment if you want to change threshold... Lower, because threshold calculated on Brier Loss and lower is better
+print("mean_squared_error_test = {}".format(mean_squared_error(Y_test, preds_test[:,1], squared=False)))
+print("Roc_auc = {}".format(roc_auc_score(Y_test, preds_test[:,1])))
 print("Brier_error = {}".format(brier_score_loss(Y_test, preds_test[:,1])))
-print("Logloss_test = {}".format(log_loss(Y_test,  preds_test[:,1])))
-# print("Precision = {}".format(precision_score(Y_test, best_preds)))
-# print("Recall = {}".format(recall_score(Y_test, best_preds)))
-# print("F1 = {}".format(f1_score(Y_test, best_preds)))
-# print("Kappa_score = {}".format(cohen_kappa_score(Y_test, best_preds)))
-# print("Matthews_corrcoef = {}".format(matthews_corrcoef(Y_test, best_preds)))
+print("Logloss_test = {}".format(log_loss(Y_test, preds_test[:,1])))
+# print("Precision = {}".format(precision_score(Y_test, preds_test[:,1])))
+# print("Recall = {}".format(recall_score(Y_test, preds_test[:,1])))
+# print("F1 = {}".format(f1_score(Y_test, preds_test[:,1])))
+# print("Kappa_score = {}".format(cohen_kappa_score(Y_test, preds_test[:,1])))
+# print("Matthews_corrcoef = {}".format(matthews_corrcoef(Y_test, preds_test[:,1])))
 ```
 
-    Mean_squared_error_test = 0.13254711396170238
+    mean_squared_error_test = 0.3640702047156597
     Roc_auc = 0.8888785004424654
     Brier_error = 0.13254711396170238
     Logloss_test = 0.4085390232688165
+
+```python
+# apply threshold to positive probabilities to create labels
+def to_labels_max(pos_probs, threshold):
+    return (pos_probs >= threshold).astype('int')
+```
+
+```python
+# evaluate each threshold
+scores = [roc_auc_score(Y_test, to_labels_max(preds_test[:,1], t)) for t in thresholds]
+# get best threshold for max is better
+ix = argmax(scores)
+print('Threshold=%.3f, Roc_auc=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.490, Roc_auc=0.81209
+
+```python
+# evaluate each threshold
+scores = [brier_score_loss(Y_test, to_labels_max(preds_test[:,1], t)) for t in thresholds]
+# get best threshold for min is better
+ix = argmin(scores)
+print('Threshold=%.3f, Roc_auc=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.505, Roc_auc=0.19180
 
 
 ## Using patsy to combine features (couldn't run due to hardware limitations)
@@ -2333,7 +2358,7 @@ plt.show()
 
 
     
-![png](output_56_last.png)
+![png](output_56_3.png)
     
 
 
@@ -2344,7 +2369,6 @@ plt.show()
 
 ```python
 # best_preds_score = np.where(preds_test < bt, 0, 1) # Uncomment if you want to change threshold... Lower, because threshold calculated on Brier Loss and lower is better
-
 print("mean_squared_error_test = {}".format(mean_squared_error(y_test, y_pred_proba[:,1], squared=False)))
 print("Roc_auc = {}".format(roc_auc_score(y_test, y_pred_proba[:,1])))
 print("Brier_error = {}".format(brier_score_loss(y_test, y_pred_proba[:,1])))
@@ -2356,10 +2380,39 @@ print("Logloss_test = {}".format(log_loss(y_test, y_pred_proba[:,1])))
 # print("Matthews_corrcoef = {}".format(matthews_corrcoef(Y_test, preds_test[:,1])))
 ```
 
-    mean_squared_error_test = 0.35980168642762755
-    Roc_auc = 0.8974319412958278
-    Brier_error = 0.12945725355616483
-    Logloss_test = 0.40655035006184204
+    mean_squared_error_test = 0.3568355720384346
+    Roc_auc = 0.9007658597305785
+    Brier_error = 0.12733162547199683
+    Logloss_test = 0.40211995678282203
+
+```python
+# apply threshold to positive probabilities to create labels
+def to_labels_max(pos_probs, threshold): # higher is better
+    return (pos_probs >= threshold).astype('int')
+```
+
+```python
+# evaluate each threshold
+scores = [roc_auc_score(y_test, to_labels_max(y_pred_proba[:,1], t)) for t in thresholds]
+# get best threshold for max is better
+ix = argmax(scores)
+print('Threshold=%.3f, Roc_auc=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.509, Roc_auc=0.82327
+
+```python
+# evaluate each threshold
+scores = [brier_score_loss(y_test, to_labels_max(y_pred_proba[:,1], t)) for t in thresholds]
+# get best threshold for min is better
+ix = argmin(scores)
+print('Threshold=%.3f, Brier=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.509, Brier=0.17665
+
+
+
 
 
 ## 3.4.Embeddings Encoding + XGBoost
@@ -2617,7 +2670,7 @@ plt.show()
 
 
     
-![png](output_58_2.png)
+![png](output_58_3.png)
     
 
 
@@ -2625,10 +2678,8 @@ plt.show()
     Wall time: 1.83 s
 
 
-
 ```python
 # best_preds_score = np.where(embedding_preds < bt, 0, 1) # Uncomment if you want to change threshold... Lower, because threshold calculated on Brier Loss and lower is better
-
 print("mean_squared_error_test = {}".format(mean_squared_error(y_test, embedding_preds[:,1], squared=False)))
 print("Roc_auc = {}".format(roc_auc_score(y_test, embedding_preds[:,1])))
 print("Brier_error = {}".format(brier_score_loss(y_test, embedding_preds[:,1])))
@@ -2640,10 +2691,54 @@ print("Logloss_test = {}".format(log_loss(y_test, embedding_preds[:,1])))
 # print("Matthews_corrcoef = {}".format(matthews_corrcoef(Y_test, preds_test[:,1])))
 ```
 
-    mean_squared_error_test = 0.32138884980187493
-    Roc_auc = 0.9316140416223828
-    Brier_error = 0.10329079277697213
-    Logloss_test = 0.33533914064784914
+    mean_squared_error_test = 0.31567197986751955
+    Roc_auc = 0.9358383924037762
+    Brier_error = 0.09964879887347967
+    Logloss_test = 0.3227270290231638
+
+```python
+best_preds_score = np.where(embedding_preds < bt, 0, 1) # Uncomment if you want to change threshold... Lower, because threshold calculated on Brier Loss and lower is better
+print("mean_squared_error_test = {}".format(mean_squared_error(y_test, best_preds_score[:,1], squared=False)))
+print("Roc_auc = {}".format(roc_auc_score(y_test, best_preds_score[:,1])))
+print("Brier_error = {}".format(brier_score_loss(y_test, best_preds_score[:,1])))
+print("Logloss_test = {}".format(log_loss(y_test, best_preds_score[:,1])))
+# print("Precision = {}".format(precision_score(Y_test, preds_test[:,1])))
+# print("Recall = {}".format(recall_score(Y_test, preds_test[:,1])))
+# print("F1 = {}".format(f1_score(Y_test, preds_test[:,1])))
+# print("Kappa_score = {}".format(cohen_kappa_score(Y_test, preds_test[:,1])))
+# print("Matthews_corrcoef = {}".format(matthews_corrcoef(Y_test, preds_test[:,1])))
+```
+
+    mean_squared_error_test = 0.36939139134527754
+    Roc_auc = 0.8636920061833471
+    Brier_error = 0.13645
+    Logloss_test = 4.712875409194756
+
+```python
+# apply threshold to positive probabilities to create labels
+def to_labels_max(pos_probs, threshold):
+    return (pos_probs >= threshold).astype('int')
+```
+
+```python
+# evaluate each threshold
+scores = [roc_auc_score(y_test, to_labels_max(embedding_preds[:,1], t)) for t in thresholds]
+# get best threshold for max is better
+ix = argmax(scores)
+print('Threshold=%.3f, Roc_auc=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.406, Roc_auc=0.86562
+
+```python
+# evaluate each threshold
+scores = [brier_score_loss(y_test, to_labels_max(embedding_preds[:,1], t)) for t in thresholds]
+# get best threshold for min is better
+ix = argmin(scores)
+print('Threshold=%.3f, Brier=%.5f' % (thresholds[ix], scores[ix]))
+```
+
+    Threshold=0.528, Brier=0.13625
 
 
 
