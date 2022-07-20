@@ -1970,6 +1970,9 @@ plt.show()
     
 
 
+    Best Threshold=0.505019, G-Mean=0.810
+
+
 
     
 ![png](output_51_2.png)
@@ -2375,6 +2378,9 @@ plt.show()
     
 
 
+    Best Threshold=0.508526, G-Mean=0.823
+
+
 
     
 ![png](output_56_3.png)
@@ -2695,6 +2701,9 @@ plt.show()
     
 ![png](output_58_1.png)
     
+
+
+    Best Threshold=0.405652, G-Mean=0.865
 
 
 
