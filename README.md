@@ -4,25 +4,6 @@
 
 ---
 
-PREDICT WETHER IS NEW OR USED
-==============================
-
-In the context of marketplaces, an algorithm is needed to predict if an item listed is new or used.
-
-Your tasks involve the data analysis, designing, processing and modeling of a machine learning solution 
-to predict if an item is new or used and then evaluate the model over held-out test data.
-
-To assist in that task a dataset is provided in `MLA_100k_checked_v3.jsonlines`.
-
-For the evaluation, you will use the accuracy metric in order to get a result of 0.86 as minimum.
-Additionally, you will have to choose an appropiate secondary metric and also elaborate an argument on why that metric was chosen.
-
-The deliverables are:
-- The file, including all the code needed to define and evaluate a model.
-- A document with an explanation on the criteria applied to choose the features, 
-  the proposed secondary metric and the performance achieved on that metrics. 
-- Optionally, you can deliver an EDA analysis with other formart like .ipynb
-
 Project Organization
 ------------
 
@@ -47,6 +28,43 @@ Project Organization
 <p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
 
 --------
+
+PREDICT WETHER IS NEW OR USED
+==============================
+
+In the context of marketplaces, an algorithm is needed to predict if an item listed is new or used.
+
+Your tasks involve the data analysis, designing, processing and modeling of a machine learning solution
+to predict if an item is new or used and then evaluate the model over held-out test data.
+
+To assist in that task a dataset is provided in `MLA_100k_checked_v3.jsonlines`.
+
+For the evaluation, you will use the accuracy metric in order to get a result of 0.86 as minimum.
+Additionally, you will have to choose an appropiate secondary metric and also elaborate an argument on why that metric was chosen.
+
+The deliverables are:
+
+- The file, including all the code needed to define and evaluate a model.
+- A document with an explanation on the criteria applied to choose the features,
+  the proposed secondary metric and the performance achieved on that metrics.
+- Optionally, you can deliver an EDA analysis with other formart like .ipynb
+
+## Resumed Conclusions
+
+1) You will find our first **selected columns at section 2.1**, then you can check our selected columns after treatment and feature engineering.
+2) We didn't predict our classes (0 and 1), but we decided to predict the **probability** for our binary classification problem, since it's more meaningful (literally, we calculate the probability to be class 0 or 1). Thus, we didn't calculate accuracy, precision, recall, F1-score, Kappa or other metrics. For prability evaluation, we opted to use **mean squared error, log loss and Brier score** (lower is better). We also used the **ROC curve** to evaluate the model and calculated **ROC AUC** score (higher is better).
+3) Our metrics only make sense if we compare between models. We compared four models.
+   (a) Our **first** one is our **baseline**, we used **logistic regressions** with no parameters and got a bad result with a score of **0.69**. We mostly used it because applying a linear model can help to get insights from the data;
+   (b) Our **second** one is more complex one with less interprability, we used an ensemble of non-linear hierarchical tree models, called **XGBoost**. We got a **ROC AUC of 0.89**, which is better than our baseline model and it's a good result, with high computational cost though;
+   (c) Our **third** one, we first used **embeddings** (neural networks) to encode our categorical features (category and seller city) with **high cardinality** which we couldn't do One Hot Encoding (due to computational cost) or Label Encoding (since unique values are independent from each other). After that, we just applied a **Logistic Regression**. Impressively, we got a **ROC AUC of 0.9** with a simple linear model for binary classification;
+   (d) Finally, our **fourth** one we also used **embeddings** for encoding, but then used an **XGBoost**. We got a **ROC AUC of 0.93**, as we expected to get a better result from the previous one;
+
+- **REMARKS: Personally, I think the embeddings encoding with Logistic Regression is the best model, because it's simpler and has more interprability. Occam's Razor principle states that other things equal, explanations that posit fewer entities, or fewer kinds of entities, are to be preferred to explanations that posit more.**
+
+
+--------
+
+
 #### Libraries
 
 * numpy
