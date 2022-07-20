@@ -8,7 +8,6 @@ Project Organization
 ------------
 
     ├── LICENSE
-    ├── Makefile           <- Makefilewith commands like `make data` or `make train`
     ├── README.md          <- The top-level README for developers using this project.
     ├── data
     │   ├── interim        <- Intermediate data that has been transformed.
