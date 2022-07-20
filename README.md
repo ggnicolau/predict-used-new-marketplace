@@ -30,6 +30,7 @@ Project Organization
 
 PREDICT WETHER IS NEW OR USED
 ==============================
+## Introduction
 
 In the context of marketplaces, an algorithm is needed to predict if an item listed is new or used.
 
@@ -2657,6 +2658,8 @@ https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-cl
 https://machinelearningmastery.com/how-to-score-probability-predictions-in-python/
 
 https://www.machinelearningplus.com/statistics/brier-score/
+
+https://towardsdatascience.com/why-you-should-always-use-feature-embeddings-with-structured-datasets-7f280b40e716
 
 ## Version
 
