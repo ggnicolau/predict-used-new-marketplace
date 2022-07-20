@@ -62,19 +62,6 @@ The deliverables are:
 - ***REMARKS: Personally, I think the embeddings encoding with Logistic Regression is the best model, because it's simpler and has more interprability. Occam's Razor principle states that other things equal, explanations that posit fewer entities, or fewer kinds of entities, are to be preferred to explanations that posit more.***
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -240,7 +227,7 @@ dfs.head(5)
     .dataframe thead th {
         text-align: right;
     }
-</style>
+</>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
