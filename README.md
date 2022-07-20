@@ -168,6 +168,7 @@ The area under ROC curve that summarizes the likelihood of the model predicting 
 
 * Github
 
+--------
 
 # **PREDICT WETHER MARKETPLACE PRODUCTS ARE NEW OR USED**
 
