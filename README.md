@@ -139,9 +139,6 @@ The area under ROC curve that summarizes the likelihood of the model predicting 
 
 *(machinelearningmastery.com)*
 ```
-```
-
-
 
 --------
 
