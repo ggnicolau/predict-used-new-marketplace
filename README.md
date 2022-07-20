@@ -1886,10 +1886,9 @@ from sklearn.metrics import cohen_kappa_score, brier_score_loss
 from sklearn.metrics import matthews_corrcoef, mean_squared_error, log_loss
 from sklearn.metrics import f1_score, recall_score, precision_score
 from sklearn.metrics import roc_auc_score, roc_curve, auc
+from numpy import sqrt, argmax, argmin
 
 # Plot F1-Score and Threshold
-from sklearn.metrics import f1_score
-
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 f1_list = []
@@ -1906,7 +1905,7 @@ title = "Best Threshold: " + str(round(bt, 2)) + " w/ F-1: " + str(round(f1, 2))
 sns.lineplot(data=df_f1, x='threshold', y='f1_score').set_title(title)
 plt.show()
 
-# Plot your Score and threshold
+# Plot your other Score and threshold
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 score_list = []
@@ -1916,9 +1915,9 @@ for threshold in threshold_list:
     score_list.append(score)
 
 df_score = pd.DataFrame({'threshold':threshold_list, 'score_score': score_list})
-df_score[df_score['score_score'] == max(df_score['score_score'])]
-bt = df_score[df_score['score_score'] == max(df_score['score_score'])]['threshold'].values[0]
-score = df_score[df_score['score_score'] == max(df_score['score_score'])]['score_score'].values[0]
+df_score[df_score['score_score'] == min(df_score['score_score'])]
+bt = df_score[df_score['score_score'] == min(df_score['score_score'])]['threshold'].values[0]
+score = df_score[df_score['score_score'] == min(df_score['score_score'])]['score_score'].values[0]
 title = "Best Threshold: " + str(round(bt, 2)) + " w/ Brier: " + str(round(score, 2))
 sns.lineplot(data=df_score, x='threshold', y='score_score').set_title(title)
 plt.show()
@@ -1928,6 +1927,14 @@ from sklearn.metrics import roc_curve
 #Plot ROC_Curve
 fpr, tpr, thresholds = roc_curve(Y_test, preds_test[:,1])
 roc = roc_auc_score(Y_test, preds_test[:,1])
+
+# calculate the g-mean for each threshold
+gmeans = sqrt(tpr * (1-fpr))
+# locate the index of the largest g-mean
+ix = argmax(gmeans)
+print('Best Threshold=%f, G-Mean=%.3f' % (thresholds[ix], gmeans[ix]))
+
+
 plt.figure()
 lw = 2
 plt.plot(
@@ -1935,8 +1942,11 @@ plt.plot(
     tpr,
     color="darkorange",
     lw=lw,
+    #marker='.',
     label=f"ROC curve (area ={'%.2f' % roc})"# % roc_auc["micro"],
 )
+
+plt.scatter(fpr[ix], tpr[ix], marker='o', color='black', label='Best') #threshold
 
 plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
 plt.xlim([0.0, 1.0])
@@ -1948,7 +1958,6 @@ plt.legend(loc="lower right")
 plt.savefig('xgboost_roc_curve.png', bbox_inches='tight', dpi = 300)
 plt.show()
 ```
-
 
     
 ![png](output_51_0.png)
@@ -2281,10 +2290,9 @@ from sklearn.metrics import cohen_kappa_score, brier_score_loss
 from sklearn.metrics import matthews_corrcoef, mean_squared_error, log_loss
 from sklearn.metrics import f1_score, recall_score, precision_score
 from sklearn.metrics import roc_auc_score, roc_curve, auc
+from numpy import sqrt, argmax, argmin
 
 # Plot F1-Score and Threshold
-from sklearn.metrics import f1_score
-
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 f1_list = []
@@ -2301,19 +2309,19 @@ title = "Best Threshold: " + str(round(bt, 2)) + " w/ F-1: " + str(round(f1, 2))
 sns.lineplot(data=df_f1, x='threshold', y='f1_score').set_title(title)
 plt.show()
 
-# Plot your Score and threshold
+# Plot your other Score and threshold
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 score_list = []
 for threshold in threshold_list:
-    pred_label = np.where(y_pred_proba[:,1] > threshold, 0, 1)
+    pred_label = np.where(y_pred_proba[:,1] < threshold, 0, 1)
     score = brier_score_loss(y_test, pred_label)
     score_list.append(score)
 
 df_score = pd.DataFrame({'threshold':threshold_list, 'score_score': score_list})
-df_score[df_score['score_score'] == max(df_score['score_score'])]
-bt = df_score[df_score['score_score'] == max(df_score['score_score'])]['threshold'].values[0]
-score = df_score[df_score['score_score'] == max(df_score['score_score'])]['score_score'].values[0]
+df_score[df_score['score_score'] == min(df_score['score_score'])]
+bt = df_score[df_score['score_score'] == min(df_score['score_score'])]['threshold'].values[0]
+score = df_score[df_score['score_score'] == min(df_score['score_score'])]['score_score'].values[0]
 title = "Best Threshold: " + str(round(bt, 2)) + " w/ Brier: " + str(round(score, 2))
 sns.lineplot(data=df_score, x='threshold', y='score_score').set_title(title)
 plt.show()
@@ -2323,6 +2331,14 @@ from sklearn.metrics import roc_curve
 #Plot ROC_Curve
 fpr, tpr, thresholds = roc_curve(y_test, y_pred_proba[:,1])
 roc = roc_auc_score(y_test, y_pred_proba[:,1])
+
+# calculate the g-mean for each threshold
+gmeans = sqrt(tpr * (1-fpr))
+# locate the index of the largest g-mean
+ix = argmax(gmeans)
+print('Best Threshold=%f, G-Mean=%.3f' % (thresholds[ix], gmeans[ix]))
+
+
 plt.figure()
 lw = 2
 plt.plot(
@@ -2330,8 +2346,11 @@ plt.plot(
     tpr,
     color="darkorange",
     lw=lw,
+    #marker='.',
     label=f"ROC curve (area ={'%.2f' % roc})"# % roc_auc["micro"],
 )
+
+plt.scatter(fpr[ix], tpr[ix], marker='o', color='black', label='Best') #threshold
 
 plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
 plt.xlim([0.0, 1.0])
@@ -2593,10 +2612,9 @@ from sklearn.metrics import cohen_kappa_score, brier_score_loss
 from sklearn.metrics import matthews_corrcoef, mean_squared_error, log_loss
 from sklearn.metrics import f1_score, recall_score, precision_score
 from sklearn.metrics import roc_auc_score, roc_curve, auc
+from numpy import sqrt, argmax, argmin
 
 # Plot F1-Score and Threshold
-from sklearn.metrics import f1_score
-
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 f1_list = []
@@ -2613,19 +2631,19 @@ title = "Best Threshold: " + str(round(bt, 2)) + " w/ F-1: " + str(round(f1, 2))
 sns.lineplot(data=df_f1, x='threshold', y='f1_score').set_title(title)
 plt.show()
 
-# Plot your Score and threshold
+# Plot your other Score and threshold
 threshold_list = np.linspace(0.05, 0.95, 200)
 
 score_list = []
 for threshold in threshold_list:
-    pred_label = np.where(embedding_preds[:,1] > threshold, 0, 1)
+    pred_label = np.where(embedding_preds[:,1] < threshold, 0, 1)
     score = brier_score_loss(y_test, pred_label)
     score_list.append(score)
 
 df_score = pd.DataFrame({'threshold':threshold_list, 'score_score': score_list})
-df_score[df_score['score_score'] == max(df_score['score_score'])]
-bt = df_score[df_score['score_score'] == max(df_score['score_score'])]['threshold'].values[0]
-score = df_score[df_score['score_score'] == max(df_score['score_score'])]['score_score'].values[0]
+df_score[df_score['score_score'] == min(df_score['score_score'])]
+bt = df_score[df_score['score_score'] == min(df_score['score_score'])]['threshold'].values[0]
+score = df_score[df_score['score_score'] == min(df_score['score_score'])]['score_score'].values[0]
 title = "Best Threshold: " + str(round(bt, 2)) + " w/ Brier: " + str(round(score, 2))
 sns.lineplot(data=df_score, x='threshold', y='score_score').set_title(title)
 plt.show()
@@ -2635,6 +2653,14 @@ from sklearn.metrics import roc_curve
 #Plot ROC_Curve
 fpr, tpr, thresholds = roc_curve(y_test, embedding_preds[:,1])
 roc = roc_auc_score(y_test, embedding_preds[:,1])
+
+# calculate the g-mean for each threshold
+gmeans = sqrt(tpr * (1-fpr))
+# locate the index of the largest g-mean
+ix = argmax(gmeans)
+print('Best Threshold=%f, G-Mean=%.3f' % (thresholds[ix], gmeans[ix]))
+
+
 plt.figure()
 lw = 2
 plt.plot(
@@ -2642,8 +2668,11 @@ plt.plot(
     tpr,
     color="darkorange",
     lw=lw,
+    #marker='.',
     label=f"ROC curve (area ={'%.2f' % roc})"# % roc_auc["micro"],
 )
+
+plt.scatter(fpr[ix], tpr[ix], marker='o', color='black', label='Best') #threshold
 
 plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
 plt.xlim([0.0, 1.0])
@@ -2652,7 +2681,7 @@ plt.xlabel("False Positive Rate")
 plt.ylabel("True Positive Rate")
 plt.title("Embeddings + XGBoost Condition Classifier")
 plt.legend(loc="lower right")
-plt.savefig('embe_xgboost_roc_curve.png', bbox_inches='tight', dpi = 300)
+plt.savefig('emb_xgboost_curve.png', bbox_inches='tight', dpi = 300)
 plt.show()
 ```
 
