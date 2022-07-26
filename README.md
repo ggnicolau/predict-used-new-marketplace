@@ -2570,7 +2570,7 @@ def build_pipeline(mode: str):
                                                                  num_parallel_tree = 2,                 # Parallel trees constructed during each iteration. Default is 1.
                                                                  importance_type = 'weight',
                                                                  eval_metric = 'auc',
-                                                                 #use_label_encoder = True,
+                                                                 use_label_encoder = False,             # True is 
                                                                  #enable_categorical = True,
                                                                  verbosity = 1,
                                                                  nthread = -1,                          # Set -1 to use all threads.
@@ -2586,26 +2586,86 @@ def build_pipeline(mode: str):
 %%time
 embeddings_pipeline = build_pipeline("embeddings")
 embeddings_pipeline.fit(X_train, y_train)
+embedding_preds = embeddings_pipeline.predict(X_test) 
+```
+
+    2022-07-25 16:57:17.741411: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+    2022-07-25 16:57:17.741433: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+    2022-07-25 16:57:20.012430: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+    2022-07-25 16:57:20.012457: W tensorflow/stream_executor/cuda/cuda_driver.cc:269] failed call to cuInit: UNKNOWN ERROR (303)
+    2022-07-25 16:57:20.012478: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (brspobitanl1727): /proc/driver/nvidia/version does not exist
+    2022-07-25 16:57:20.012754: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+    To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
+
+
+    CPU times: user 18min 11s, sys: 15 s, total: 18min 26s
+    Wall time: 3min 6s
+
+
+
+```python
+# Check accuracy for classes
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, precision_score, recall_score, f1_score, cohen_kappa_score, matthews_corrcoef
+
+print("Accuracy = {}".format(accuracy_score(y_test, embedding_preds)))
+print("Balanced accuracy = {}".format(balanced_accuracy_score(y_test, embedding_preds)))
+print("Precision = {}".format(precision_score(y_test, embedding_preds)))
+print("Recall = {}".format(recall_score(y_test, embedding_preds)))
+print("F1 = {}".format(f1_score(y_test, embedding_preds)))
+print("Kappa_score = {}".format(cohen_kappa_score(y_test, embedding_preds)))
+print("Matthews_corrcoef = {}".format(matthews_corrcoef(y_test, embedding_preds)))
+```
+
+    Accuracy = 0.85885
+    Balanced accuracy = 0.8587227386116755
+    Precision = 0.839697904478247
+    Recall = 0.8571118349619978
+    F1 = 0.8483155123314169
+    Kappa_score = 0.7163577766348136
+    Matthews_corrcoef = 0.7164897258171989
+
+
+
+```python
+# Check target column balance
+dfs.condition.value_counts()
+```
+
+
+
+
+    0    53758
+    1    46242
+    Name: condition, dtype: int64
+
+
+
+
+```python
+%%time
+embeddings_pipeline = build_pipeline("embeddings")
+embeddings_pipeline.fit(X_train, y_train)
 embedding_preds = embeddings_pipeline.predict_proba(X_test) 
 ```
 
-    2022-07-19 15:35:20.872263: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
-    2022-07-19 15:35:20.872321: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
-    2022-07-19 15:35:23.074450: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
-    2022-07-19 15:35:23.074487: W tensorflow/stream_executor/cuda/cuda_driver.cc:269] failed call to cuInit: UNKNOWN ERROR (303)
-    2022-07-19 15:35:23.074515: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (brspobitanl1727): /proc/driver/nvidia/version does not exist
-    2022-07-19 15:35:23.074705: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+    2022-07-20 11:39:38.402332: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcudart.so.11.0'; dlerror: libcudart.so.11.0: cannot open shared object file: No such file or directory
+    2022-07-20 11:39:38.402354: I tensorflow/stream_executor/cuda/cudart_stub.cc:29] Ignore above cudart dlerror if you do not have a GPU set up on your machine.
+    2022-07-20 11:39:40.564692: W tensorflow/stream_executor/platform/default/dso_loader.cc:64] Could not load dynamic library 'libcuda.so.1'; dlerror: libcuda.so.1: cannot open shared object file: No such file or directory
+    2022-07-20 11:39:40.564719: W tensorflow/stream_executor/cuda/cuda_driver.cc:269] failed call to cuInit: UNKNOWN ERROR (303)
+    2022-07-20 11:39:40.564736: I tensorflow/stream_executor/cuda/cuda_diagnostics.cc:156] kernel driver does not appear to be running on this host (brspobitanl1727): /proc/driver/nvidia/version does not exist
+    2022-07-20 11:39:40.564919: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
     To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
     /home/ggnicolau/miniconda3/envs/jupyter-1/lib/python3.10/site-packages/xgboost/sklearn.py:1224: UserWarning: The use of label encoder in XGBClassifier is deprecated and will be removed in a future release. To remove this warning, do the following: 1) Pass option use_label_encoder=False when constructing XGBClassifier object; and 2) Encode your labels (y) as integers starting with 0, i.e. 0, 1, 2, ..., [num_class - 1].
       warnings.warn(label_encoder_deprecation_msg, UserWarning)
 
 
-    CPU times: user 15min 3s, sys: 8.37 s, total: 15min 11s
-    Wall time: 2min 16s
+    CPU times: user 15min 37s, sys: 8.47 s, total: 15min 45s
+    Wall time: 2min 24s
 
 
 
 ```python
+# Check probabilities score
 embedding_preds = embeddings_pipeline.predict_proba(X_test) 
 ```
 
