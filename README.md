@@ -2632,7 +2632,6 @@ dfs.condition.value_counts()
 %%time
 embeddings_pipeline = build_pipeline("embeddings")
 embeddings_pipeline.fit(X_train, y_train)
-embedding_preds = embeddings_pipeline.predict_proba(X_test) 
 ```
 
 
