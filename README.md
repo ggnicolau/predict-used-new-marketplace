@@ -26,7 +26,7 @@ Project Organization
 
 PREDICT WETHER IS NEW OR USED
 ==============================
-## Introduction
+## Challenge
 
 In the context of marketplaces, an algorithm is needed to predict if an item listed is new or used.
 
